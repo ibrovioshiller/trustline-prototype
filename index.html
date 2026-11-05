@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TrustLine prototype</title>
+<style>
+:root{--navy:#14304F;--mar:#F4A62A;--coral:#E9724C;--cream:#FBF3E4;--ink:#2A2A2A;--white:#FFFFFF;--green:#2F8F5B;--amber:#F4A62A;--red:#C8402F;--page:#FBF3E4;--text:#14304F;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#0E2236;--text:#FBF3E4;color-scheme:dark}}
+:root[data-theme="dark"]{--page:#0E2236;--text:#FBF3E4;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.banner{background:var(--navy);color:var(--cream);text-align:center;font-size:13px;font-weight:600;padding:6px 12px;border-bottom:1px solid #FBF3E433}
+main{max-width:980px;margin:0 auto;padding:16px 14px 40px}
+h1{font-size:24px;margin:8px 0 2px}
+.sub{margin:0 0 14px;opacity:.85}
+.tabs{display:flex;gap:8px;margin-bottom:18px}
+.tab{flex:1;min-height:52px;font:inherit;font-weight:700;border-radius:14px;border:2px solid var(--navy);background:var(--white);color:var(--navy);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--navy);color:var(--cream);border-color:var(--cream)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+.wrap{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:flex-start}
+.phone{width:min(100%,370px);background:var(--navy);border-radius:38px;padding:14px;border:2px solid #FBF3E433}
+.bar{display:flex;justify-content:space-between;color:var(--cream);font:600 13px ui-monospace,Menlo,Consolas,monospace;padding:4px 10px 10px}
+.screen{background:var(--cream);color:var(--ink);border-radius:26px;min-height:540px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.screen select{min-height:48px;font:inherit;border:2px solid var(--navy);border-radius:12px;background:var(--white);color:var(--ink);padding:0 10px;width:100%}
+.screen h2{margin:0;font-size:22px;color:var(--navy)}
+.screen p{margin:0}
+.offer{background:var(--white);border:2px solid var(--navy);border-radius:18px;padding:16px;text-align:center}
+.offer strong{display:block;font-size:40px;color:var(--navy);line-height:1.1;margin:4px 0}
+.btn{min-height:56px;border-radius:16px;font:inherit;font-weight:800;font-size:18px;cursor:pointer;width:100%;padding:8px 14px;border:3px solid var(--navy);background:var(--white);color:var(--navy);text-align:center}
+.btn.mar{background:var(--mar);border-color:var(--mar);color:var(--navy)}
+.btn.no{background:var(--white);border-color:var(--coral);color:var(--navy)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{min-height:48px;background:none;border:0;font:inherit;font-weight:700;color:var(--navy);text-decoration:underline;cursor:pointer}
+.tick{width:56px;height:56px;border-radius:50%;background:var(--mar);color:var(--navy);font-size:30px;font-weight:900;display:grid;place-items:center}
+.spacer{flex:1}
+.jump{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.jump button{min-height:44px;flex:1 1 45%;font:inherit;font-weight:700;border-radius:12px;border:2px solid var(--navy);background:var(--white);color:var(--navy);cursor:pointer}
+.side{flex:1 1 280px;max-width:420px}
+.card{background:var(--white);color:var(--ink);border-radius:18px;padding:16px;border:2px solid var(--navy)}
+.card h3{margin:0 0 6px;font-size:16px;color:var(--navy)}
+.field{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:14px;margin-top:10px}
+.field input{min-height:48px;font:inherit;border:2px solid var(--navy);border-radius:12px;padding:0 10px;background:var(--white);color:var(--ink)}
+.note{font-size:13px;opacity:.85;margin-top:10px}
+.decision{border-radius:20px;padding:18px;margin-bottom:16px}
+.decision .lab{font-size:34px;font-weight:900;line-height:1.1}
+.d-persevere{background:var(--green);color:#fff}
+.d-pivot{background:var(--amber);color:var(--navy)}
+.d-stop{background:var(--red);color:#fff}
+.decision ul{margin:10px 0 0;padding-left:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.big{font-size:32px;font-weight:800;color:var(--navy);line-height:1.1}
+.row{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-weight:600}
+.meter{position:relative;height:16px;background:#14304F22;border-radius:8px;margin:10px 0 6px}
+.fill{height:100%;border-radius:8px;background:var(--navy)}
+.fill.c{background:var(--coral)}
+.mark{position:absolute;top:-5px;width:3px;height:26px;background:var(--ink)}
+.chip{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:800;font-size:14px}
+.chip.green{background:var(--green);color:#fff}.chip.amber{background:var(--amber);color:var(--navy)}.chip.red{background:var(--red);color:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scen{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.scen button{min-height:48px;flex:1 1 30%;font:inherit;font-weight:700;border-radius:12px;border:2px solid var(--navy);background:var(--white);color:var(--navy);cursor:pointer}
+.scen button.mar{background:var(--mar);border-color:var(--mar)}
+select#wk{min-height:48px;font:inherit;border:2px solid var(--navy);border-radius:12px;padding:0 10px;background:var(--white);color:var(--ink)}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="banner">Prototype: illustrative data only</div>
+<main>
+<h1>TrustLine: top-up at final repayment</h1>
+<p class="sub">Zero forms. One tap. Pre-approved when the last instalment clears.</p>
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" id="t-a" aria-selected="true" data-tab="a">Trader view</button>
+<button class="tab" role="tab" id="t-b" aria-selected="false" data-tab="b">Ops dashboard</button>
+</div>
+
+<section id="a">
+<div class="wrap">
+<div>
+<div class="phone">
+<div class="bar"><span>TrustLine *347#</span><span id="stepLab"></span></div>
+<div class="screen">
+<select id="lang" aria-label="Language">
+<option value="en">English</option><option value="yo">Yorùbá</option><option value="ha">Hausa</option><option value="ig">Igbo</option><option value="pcm">Pidgin</option>
+</select>
+<div id="scr" style="display:flex;flex-direction:column;gap:12px;flex:1"></div>
+</div>
+</div>
+<div class="jump" id="jump"></div>
+</div>
+<div class="side">
+<div class="card">
+<h3>Story</h3>
+<p>Amina sells provisions in a market in Lagos. She has just paid her last instalment. Tap through what she sees.</p>
+<label class="field">Previous loan limit (₦)<input id="lim" type="number" inputmode="numeric" min="5000" step="5000" value="50000"></label>
+<p class="note">The offer is sized to this limit. Translations are illustrative drafts: have native speakers review them before any field use.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="b" class="hidden">
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+<label for="wk" style="font-weight:700">Experiment week</label>
+<select id="wk"></select>
+<span>200 test and 200 control borrowers</span>
+</div>
+<div id="dec" class="decision" aria-live="polite"></div>
+<div class="grid" id="cards"></div>
+
+<div class="card" style="margin-top:16px">
+<h3>Try different outcomes</h3>
+<div class="scen">
+<button class="mar" data-sc="p">Show Persevere</button>
+<button data-sc="v">Show Pivot</button>
+<button data-sc="s">Show Stop</button>
+<button data-sc="r">Reset demo data</button>
+</div>
+<h3>Edit this week’s demo numbers</h3>
+<div class="two" id="ed1"></div>
+<h3 style="margin-top:16px">Edit thresholds</h3>
+<div class="two" id="ed2"></div>
+</div>
+</section>
+</main>
+
+<script>
+const N=200;
+const T={
+en:{thanks:"Well done, Amina! Your last instalment is cleared.",offer:"You are pre-approved for",sub:"Same as your previous limit. No forms. No new paperwork.",restock:"Restock now",no:"Not now",pause:"Slow sales day? Pause token",sq:"What stopped you today?",sqs:["Price or interest","Loan size","I don’t need it","Other"],sthx:"Thank you. Your answer helps us improve. Your offer stays open for 7 days.",funds:"Funds released",fb:"{a} is in your wallet. No forms were needed.",pay:"Pay my distributor directly",keep:"Keep in my wallet",paid:"{a} sent to Mama Ngozi Wholesale.",kept:"Okay. Your money stays in your wallet.",pt:"Weekly pause token",pb:"Slow sales? Move this week’s instalment by 1 day with no penalty. Tokens left this week:",use:"Use pause token",done:"Pause applied. Tokens left: 0",back:"Back to offer",again:"Start over"},
+yo:{thanks:"O ṣeun, Amina! O ti san owó ìdá ìkẹyìn rẹ tán.",offer:"A ti fọwọ́ sí i fún ọ ní",sub:"Bí ààlà rẹ tẹ́lẹ̀. Kò sí fọ́ọ̀mù.",restock:"Tún ra ọjà báyìí",no:"Kì í ṣe báyìí",pause:"Ọjà dákẹ́? Àmì ìdúró",sq:"Kí ló dá ọ dúró lónìí?",sqs:["Owó èlé","Ìwọ̀n owó yíyá","Èmi kò nílò rẹ̀","Òmíràn"],sthx:"O ṣeun. Ìdáhùn rẹ ń ràn wá lọ́wọ́. Ìfilọ́lẹ̀ yóò wà fún ọjọ́ 7.",funds:"A ti tú owó sílẹ̀",fb:"{a} ti wà nínú àpamọ́wọ́ rẹ. Kò sí fọ́ọ̀mù.",pay:"Sanwó fún olùpín ọjà mi",keep:"Fi sínú àpamọ́wọ́",paid:"A ti fi {a} ránṣẹ́ sí Mama Ngozi Wholesale.",kept:"Ó dára. Owó rẹ wà nínú àpamọ́wọ́.",pt:"Àmì ìdúró ọ̀sẹ̀",pb:"Ọjà kò lọ? Sún ìdá ọ̀sẹ̀ yìí síwájú ọjọ́ kan, kò sí ìjìyà. Àmì tó kù:",use:"Lo àmì ìdúró",done:"A ti lo ìdúró. Àmì tó kù: 0",back:"Padà sí ìfilọ́lẹ̀",again:"Bẹ̀rẹ̀ lẹ́ẹ̀kan sí i"},
+ha:{thanks:"Madalla, Amina! Kin gama biyan kashi na ƙarshe.",offer:"An riga an amince miki da",sub:"Daidai da iyakar ki ta baya. Babu fom.",restock:"Sake sayen kaya yanzu",no:"Ba yanzu ba",pause:"Kasuwa ta yi sanyi? Alamar hutu",sq:"Me ya hana ki yau?",sqs:["Kuɗin ruwa","Girman rance","Ba na bukata","Wani abu"],sthx:"Na gode. Amsarki tana taimaka mana. Tayin zai kasance kwana 7.",funds:"An aika kuɗi",fb:"{a} yana cikin wallet ɗinki. Babu fom.",pay:"Biya dillalina kai tsaye",keep:"Bar a wallet",paid:"An aika {a} zuwa Mama Ngozi Wholesale.",kept:"To. Kuɗin ki yana nan a wallet.",pt:"Alamar hutu ta mako",pb:"Kasuwa ba ta yi kyau ba? Matsar da kashin wannan mako da kwana 1 babu hukunci. Alamu da suka rage:",use:"Yi amfani da alamar hutu",done:"An yi hutu. Alamu da suka rage: 0",back:"Koma baya",again:"Fara daga farko"},
+ig:{thanks:"Ọ dị mma, Amina! Ị kwụchara òkè ikpeazụ gị.",offer:"A kwadoro gị tupu maka",sub:"Otu ihe ahụ dị ka oke gị gara aga. Enweghị akwụkwọ.",restock:"Zụta ngwa ahịa ugbu a",no:"Ọ bụghị ugbu a",pause:"Ahịa dị jụụ? Akara ịkwụsị",sq:"Gịnị gbochiri gị taa?",sqs:["Ọnụ ahịa ma ọ bụ ọmụrụ","Nha ọnụ ego","Achọghị m ya","Ọzọ"],sthx:"Daalụ. Azịza gị na-enyere anyị aka. Onyinye ga-adị ụbọchị 7.",funds:"Ewepụla ego",fb:"{a} dị na wallet gị. Enweghị akwụkwọ.",pay:"Kwụọ onye na-ere m ngwa ahịa ozugbo",keep:"Hapụ ya na wallet",paid:"Ezigara {a} Mama Ngozi Wholesale.",kept:"Ọ dị mma. Ego gị nọ na wallet gị.",pt:"Akara ịkwụsị izu",pb:"Ahịa adịghị mma? Wepụ òkè izu a otu ụbọchị n’enweghị ntaramahụhụ. Akara fọdụrụ:",use:"Jiri akara ịkwụsị",done:"Emela ya. Akara fọdụrụ: 0",back:"Laghachi",again:"Malite ọzọ"},
+pcm:{thanks:"Well done, Amina! You don finish your last instalment.",offer:"We don pre-approve you for",sub:"Same as your last limit. No form, no wahala.",restock:"Restock now",no:"Not now",pause:"Market slow? Pause token",sq:"Wetin stop you today?",sqs:["Price or interest","Loan size","I no need am","Another thing"],sthx:"Thank you. Your answer dey help us. Offer go dey open for 7 days.",funds:"Money don land",fb:"{a} dey your wallet. No form needed.",pay:"Pay my distributor direct",keep:"Keep am for wallet",paid:"{a} don go Mama Ngozi Wholesale.",kept:"Okay. Your money dey your wallet.",pt:"Weekly pause token",pb:"Sales slow? Move this week instalment by 1 day, no penalty. Tokens wey remain:",use:"Use pause token",done:"Pause don work. Tokens wey remain: 0",back:"Go back",again:"Start again"}
+};
+const $=s=>document.querySelector(s);
+let lang="en",scr="offer",tokens=1;
+const naira=n=>"₦"+Math.round(n).toLocaleString("en-NG");
+const JUMPS=[["offer","1 Offer"],["survey","2 Declined"],["funds","3 Funds"],["pause","4 Pause"]];
+function draw(){
+  const t=T[lang],a=naira($("#lim").value||0);
+  let h="";
+  if(scr==="offer")h=`<p>${t.thanks}</p><div class="offer"><small>${t.offer}</small><strong>${a}</strong><small>${t.sub}</small></div><div class="spacer"></div><button class="btn mar" data-a="restock">${t.restock}</button><button class="btn no" data-a="no">${t.no}</button><button class="link" data-a="pause">${t.pause}</button>`;
+  else if(scr==="survey")h=`<h2>${t.sq}</h2>`+t.sqs.map(s=>`<button class="btn" data-a="ans">${s}</button>`).join("");
+  else if(scr==="sdone")h=`<h2>✓</h2><p>${t.sthx}</p><div class="spacer"></div><button class="btn mar" data-a="restock">${t.restock}</button><button class="link" data-a="start">${t.again}</button>`;
+  else if(scr==="funds")h=`<div class="tick">✓</div><h2>${t.funds}</h2><p>${t.fb.replace("{a}",a)}</p><div class="spacer"></div><button class="btn mar" data-a="pay">${t.pay}</button><button class="btn no" data-a="keep">${t.keep}</button>`;
+  else if(scr==="paid"||scr==="kept")h=`<div class="tick">✓</div><p>${(scr==="paid"?t.paid:t.kept).replace("{a}",a)}</p><div class="spacer"></div><button class="btn mar" data-a="start">${t.again}</button>`;
+  else if(scr==="pause")h=`<h2>${t.pt}</h2><p>${t.pb} <strong>${tokens}</strong></p><div class="spacer"></div><button class="btn mar" data-a="use" ${tokens?"":"disabled"}>${t.use}</button><button class="link" data-a="start">${t.back}</button>`;
+  else if(scr==="pdone")h=`<div class="tick">✓</div><p>${t.done}</p><div class="spacer"></div><button class="btn mar" data-a="start">${t.back}</button>`;
+  $("#scr").innerHTML=h;
+  const grp={offer:"offer",survey:"survey",sdone:"survey",funds:"funds",paid:"funds",kept:"funds",pause:"pause",pdone:"pause"}[scr];
+  $("#jump").innerHTML=JUMPS.map(j=>`<button data-j="${j[0]}" ${j[0]===grp?'aria-current="true" style="background:#14304F;color:#FBF3E4"':""}>${j[1]}</button>`).join("");
+  $("#stepLab").textContent=JUMPS.findIndex(j=>j[0]===grp)+1+"/4";
+}
+$("#scr").addEventListener("click",e=>{
+  const b=e.target.closest("[data-a]");if(!b)return;const x=b.dataset.a;
+  scr={restock:"funds",no:"survey",ans:"sdone",pause:"pause",start:"offer",pay:"paid",keep:"kept",use:"pdone"}[x];
+  if(x==="use")tokens=0;if(x==="start")tokens=1;draw();
+});
+$("#jump").addEventListener("click",e=>{const b=e.target.closest("[data-j]");if(b){scr=b.dataset.j;draw()}});
+$("#lang").onchange=e=>{lang=e.target.value;document.documentElement.lang={pcm:"en"}[lang]||lang;draw()};
+$("#lim").oninput=draw;
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+  ["a","b"].forEach(k=>{$("#"+k).classList.toggle("hidden",k!==b.dataset.tab);$("#t-"+k).setAttribute("aria-selected",k===b.dataset.tab)})});
+
+/* ---------- Ops dashboard ---------- */
+const DEF=[[84,62,4.8,540,40],[90,64,5.2,520,42],[94,66,5.9,500,44],[98,66,6.1,480,46],[102,68,6.4,470,48],[106,70,6.8,455,50],[108,70,7.0,440,52],[112,72,7.2,430,54],[114,72,7.4,420,56],[116,74,7.5,410,57],[118,74,7.6,405,58],[120,74,7.8,400,59]];
+const K=["t","c","par","cost","rep"];
+const mk=()=>DEF.map(r=>Object.fromEntries(K.map((k,i)=>[k,r[i]])));
+const S={w:12,rows:mk(),th:{target:15,floor:5,pg:8,pr:10,base:38,rep:60},cc:1150};
+const L1={t:["Test took a second loan (of 200)",0,200,1],c:["Control took a second loan (of 200)",0,200,1],par:["PAR30 on top-ups (%)",0,100,.1],cost:["Test cost per loan (₦)",0,100000,10],rep:["Repeat-borrowing rate, test (%)",0,100,.5]};
+const L2={target:["Target lift (points)",1],floor:["Pivot floor lift (points)",1],pg:["PAR30 green up to (%)",.1],pr:["PAR30 red above (%)",.1],base:["Repeat baseline (%)",1],rep:["Repeat target (%)",1]};
+$("#wk").innerHTML=DEF.map((_,i)=>`<option value="${i+1}" ${i==11?"selected":""}>Week ${i+1}</option>`).join("");
+$("#ed1").innerHTML=Object.entries(L1).map(([k,v])=>`<label class="field">${v[0]}<input type="number" inputmode="decimal" data-r="${k}" min="${v[1]}" max="${v[2]}" step="${v[3]}"></label>`).join("")+`<label class="field">Control cost per loan (₦)<input type="number" inputmode="decimal" data-g="cc" min="0" step="10"></label>`;
+$("#ed2").innerHTML=Object.entries(L2).map(([k,v])=>`<label class="field">${v[0]}<input type="number" inputmode="decimal" data-th="${k}" step="${v[1]}"></label>`).join("");
+function fill(){
+  const r=S.rows[S.w-1];
+  document.querySelectorAll("[data-r]").forEach(i=>i.value=r[i.dataset.r]);
+  document.querySelectorAll("[data-th]").forEach(i=>i.value=S.th[i.dataset.th]);
+  document.querySelector("[data-g]").value=S.cc;
+}
+const num=v=>{const n=parseFloat(v);return isNaN(n)?0:n};
+document.addEventListener("input",e=>{
+  const i=e.target;
+  if(i.dataset.r){S.rows[S.w-1][i.dataset.r]=num(i.value);calc()}
+  else if(i.dataset.th){S.th[i.dataset.th]=num(i.value);calc()}
+  else if(i.dataset.g){S.cc=num(i.value);calc()}
+});
+$("#wk").onchange=e=>{S.w=+e.target.value;fill();calc()};
+document.querySelectorAll("[data-sc]").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.sc,r=S.rows[S.w-1];
+  if(k==="r"){S.rows=mk();S.th={target:15,floor:5,pg:8,pr:10,base:38,rep:60};S.cc=1150}
+  else Object.assign(r,{p:{t:120,c:74,par:7.8},v:{t:100,c:74,par:8.9},s:{t:84,c:76,par:11.2}}[k]);
+  fill();calc();
+});
+function calc(){
+  const r=S.rows[S.w-1],th=S.th;
+  const tu=r.t/N*100,cu=r.c/N*100,lift=tu-cu,par=r.par;
+  let d;
+  if(lift<th.floor||par>th.pr)d="stop";
+  else if(lift>=th.target&&par<=th.pg)d="persevere";
+  else d="pivot";
+  const lab={persevere:["✔","PERSEVERE"],pivot:["▲","PIVOT"],stop:["✖","STOP"]}[d];
+  const why={persevere:"Lift is at or above target and PAR30 is within the green limit.",pivot:"Lift is between the pivot floor and target, or PAR30 is in the amber band.",stop:"Lift is below the pivot floor, or PAR30 is above the red limit."}[d];
+  const ps=par<=th.pg?["green","GREEN: within limit"]:par<=th.pr?["amber","AMBER: watch closely"]:["red","RED: above limit"];
+  $("#dec").className="decision d-"+d;
+  $("#dec").innerHTML=`<div class="lab">${lab[0]} ${lab[1]}</div><div>${why}</div><ul><li>Lift ${lift.toFixed(1)} points (target ${th.target}+, pivot floor ${th.floor}).</li><li>PAR30 ${par.toFixed(1)}% (green up to ${th.pg}%, red above ${th.pr}%).</li></ul>`;
+  const dc=r.cost-S.cc;
+  const rl=r.rep-th.base;
+  $("#cards").innerHTML=`
+  <div class="card"><h3>Seven-day second-loan take-up</h3><div class="big">+${lift.toFixed(1)} pts</div>
+  <div class="row"><span>Test</span><span>${tu.toFixed(1)}%</span></div><div class="meter"><div class="fill" style="width:${tu}%"></div></div>
+  <div class="row"><span>Control</span><span>${cu.toFixed(1)}%</span></div><div class="meter"><div class="fill c" style="width:${cu}%"></div></div>
+  <p class="note">Target: +${th.target} points. ${lift>=th.target?"Target met.":"Below target by "+(th.target-lift).toFixed(1)+" points."}</p></div>
+  <div class="card"><h3>PAR30 on top-up loans</h3><div class="big">${par.toFixed(1)}%</div>
+  <p style="margin-top:8px"><span class="chip ${ps[0]}">${ps[1]}</span></p>
+  <p class="note">Green at ${th.pg}% or below. Amber above ${th.pg}% up to ${th.pr}%. Red above ${th.pr}%.</p></div>
+  <div class="card"><h3>Cost per disbursed loan</h3><div class="big">${naira(r.cost)}</div>
+  <div class="row"><span>Test</span><span>${naira(r.cost)}</span></div><div class="row"><span>Control</span><span>${naira(S.cc)}</span></div>
+  <p class="note">Test is ${naira(Math.abs(dc))} ${dc<=0?"lower":"higher"} than control per loan.</p></div>
+  <div class="card"><h3>Repeat-borrowing rate</h3><div class="big">${r.rep.toFixed(1)}%</div>
+  <div class="meter"><div class="fill" style="width:${Math.min(100,r.rep)}%"></div><div class="mark" style="left:${th.base}%"></div><div class="mark" style="left:${th.rep}%"></div></div>
+  <div class="row"><span>Baseline ${th.base}%</span><span>Target ${th.rep}%</span></div>
+  <p class="note">${rl>=0?"+":""}${rl.toFixed(1)} points vs baseline. ${r.rep>=th.rep?"Target met.":(th.rep-r.rep).toFixed(1)+" points to target."}</p></div>`;
+}
+draw();fill();calc();
+</script>
+</body>
+</html>
